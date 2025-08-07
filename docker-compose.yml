@@ -1,0 +1,61 @@
+version: '3.8'
+
+services:
+  # PHP and Apache service using the Dockerfile
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: php_web
+    ports:
+      - "8080:80"
+    volumes:
+      - ./:/var/www/html
+      - ./docker/php/php.ini:/usr/local/etc/php/conf.d/custom.ini
+    depends_on:
+      - db
+      - mailhog
+    environment:
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_DATABASE=app_db
+      - DB_USERNAME=postgres
+      - DB_PASSWORD=secret
+      - MAIL_HOST=mailhog
+      - MAIL_PORT=1025
+    tty: true
+    networks:
+      - app-network
+
+  # PostgreSQL service
+  db:
+    image: postgres:14-alpine
+    container_name: postgres_db
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_PASSWORD=secret
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=app_db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - app-network
+
+  # Mailhog for email testing
+  mailhog:
+    image: mailhog/mailhog
+    container_name: mailhog
+    ports:
+      - "1025:1025" # SMTP server
+      - "8025:8025" # Web UI
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
