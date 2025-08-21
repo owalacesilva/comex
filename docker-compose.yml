@@ -1,20 +1,36 @@
 version: '3.8'
 
 services:
-  # PHP and Apache service using the Dockerfile
-  web:
+  # PostgreSQL service
+  db:
+    image: postgres:14-alpine
+    container_name: postgres
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_PASSWORD=secret
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=app_db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - app-network
+
+  app:
     build:
       context: .
-      dockerfile: Dockerfile
-    container_name: php_web
+      dockerfile: .docker/php/Dockerfile
+    container_name: php_app
     ports:
-      - "8080:80"
+      - "9000:9000"
     volumes:
       - ./:/var/www/html
-      - ./docker/php/php.ini:/usr/local/etc/php/conf.d/custom.ini
+      - ./.docker/php/php.ini:/usr/local/etc/php/conf.d/custom.ini
+      - ./.docker/php/php-fpm.conf:/usr/local/etc/php-fpm.d/php-fpm.conf
+      - ./logs/php:/var/log/php
     depends_on:
       - db
-      - mailhog
     environment:
       - DB_HOST=db
       - DB_PORT=5432
@@ -27,19 +43,20 @@ services:
     networks:
       - app-network
 
-  # PostgreSQL service
-  db:
-    image: postgres:14-alpine
-    container_name: postgres_db
-    restart: unless-stopped
+  apache2:
+    image: httpd:2.4
+    container_name: apache2
     ports:
-      - "5432:5432"
+      - "8080:8080"
     environment:
-      - POSTGRES_PASSWORD=secret
-      - POSTGRES_USER=postgres
-      - POSTGRES_DB=app_db
+      - APACHE_LOG_DIR=/usr/local/apache2/logs
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - ./public:/var/www/html/public
+      - ./.docker/apache/httpd.conf:/usr/local/apache2/conf/httpd.conf
+      - ./.docker/apache/vhosts.conf:/usr/local/apache2/conf/vhosts/default.conf
+      - ./logs/apache:/usr/local/apache2/logs
+    depends_on:
+      - app
     networks:
       - app-network
 
