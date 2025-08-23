@@ -4,6 +4,7 @@ namespace Infrastructure\Slim\Controllers;
 
 use Application\Traits\JsonResponseTrait;
 use Psr\Http\Message\ResponseInterface;
+use Psr\Log\LoggerInterface;
 use Slim\Psr7\Request;
 use Slim\Psr7\Response;
 
@@ -29,6 +30,8 @@ final class HealthCheckController extends BaseController
 {
     use JsonResponseTrait;
 
+    public function __construct(private readonly LoggerInterface $logger) {}
+
     /**
      * Handles the incoming request and prepares a response.
      *
@@ -46,6 +49,8 @@ final class HealthCheckController extends BaseController
             'php_version' => PHP_VERSION,
             'memory_usage' => memory_get_usage(true)
         ];
+
+        $this->logger->info('Health check.', $data);
 
         return $this->success('Service is running', $data);
     }
