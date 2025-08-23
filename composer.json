@@ -5,6 +5,44 @@
   "require": {
     "nesbot/carbon": "3.10.2",
     "slim/slim": "4.14.0",
-    "illuminate/database": "v12.21.0"
+    "illuminate/database": "v12.21.0",
+    "php-di/php-di": "^7.0",
+    "monolog/monolog": "^3.9",
+    "slim/psr7": "^1.7",
+    "httpsoft/http-message": "^1.1",
+    "httpsoft/http-server-request": "^1.1",
+    "nyholm/psr7": "^1.8",
+    "nyholm/psr7-server": "^1.1",
+    "guzzlehttp/psr7": "^2.7",
+    "laminas/laminas-diactoros": "^3.6",
+    "zircote/swagger-php": "^5.3",
+    "doctrine/annotations": "^2.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Application\\": "src/Application",
+      "Domain\\": "src/Domain",
+      "Infrastructure\\": "src/Infrastructure",
+      "Interface\\": "src/Interface"
+    }
+  },
+  "scripts": {
+    "openapi": "@php vendor/bin/openapi",
+    "test": "@php vendor/bin/phpunit",
+    "test:coverage": "@php vendor/bin/phpunit --colors=always --coverage-text",
+    "check:composer": [
+      "composer validate --strict --no-check-lock",
+      "composer audit"
+    ],
+    "check:all": [
+      "@check:composer",
+      "@test"
+    ]
+  },
+  "scripts-descriptions": {
+    "test": "Run the PHPUnit test suite.",
+    "test:coverage": "Run tests and show code coverage in the console.",
+    "check:composer": "Validate composer.json and run a security audit.",
+    "check:all": "Run all checks and the test suite."
   }
 }

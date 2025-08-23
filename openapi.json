@@ -1,0 +1,15 @@
+{
+    "openapi": "3.0.0",
+    "paths": {
+        "/health": {
+            "get": {
+                "operationId": "a334ab17cf28349c2e8b854b77592141",
+                "responses": {
+                    "200": {
+                        "description": "An example resource"
+                    }
+                }
+            }
+        }
+    }
+}

@@ -1,12 +1,30 @@
 <?php
 
-namespace Application\Controllers;
+namespace Infrastructure\Slim\Controllers;
 
 use Application\Traits\JsonResponseTrait;
 use Psr\Http\Message\ResponseInterface;
 use Slim\Psr7\Request;
 use Slim\Psr7\Response;
 
+/**
+ * @OA\Get(
+ *     path="/health",
+ *     summary="Health Check",
+ *     tags={"Overview"},
+ *     description="Endpoint for monitoring the API service health status. Returns basic system information including service status, current timestamp, PHP version, and memory usage. This endpoint can be used for monitoring, load balancing, and service availability checks.",
+ *     @OA\Response(
+ *         response="200",
+ *         description="Service health information",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="status", type="string", example="healthy"),
+ *             @OA\Property(property="timestamp", type="integer", example=1692806400),
+ *             @OA\Property(property="php_version", type="string", example="8.4.0"),
+ *             @OA\Property(property="memory_usage", type="integer", example=2097152)
+ *         )
+ *     )
+ * )
+ */
 final class HealthCheckController extends BaseController
 {
     use JsonResponseTrait;

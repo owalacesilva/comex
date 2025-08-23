@@ -6,7 +6,7 @@
  * for adding routes to the application.
  */
 
-namespace Application\Routes;
+namespace Infrastructure\Slim\Routes;
 
 use Slim\App;
 

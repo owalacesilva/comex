@@ -1,8 +1,8 @@
 <?php
 
-namespace Application\Routes;
+namespace Infrastructure\Slim\Routes;
 
-use Application\Controllers\HealthCheckController;
+use Infrastructure\Slim\Controllers\HealthCheckController;
 
 class HealthCheckRoute extends Route
 {
