@@ -8,4 +8,4 @@ if (!file_exists($autoloadFile)) {
 
 require_once $autoloadFile;
 
-require_once '../src/application.php';
+require_once '../config/application.php';

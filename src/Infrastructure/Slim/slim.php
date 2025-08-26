@@ -10,13 +10,12 @@ try {
 
     // Define configuration files
     $configFiles = [
-        'dependencies' => __DIR__ . '/dependencies.php',
-        'repositories' => __DIR__ . '/repositories.php',
+        'dependencies' => 'dependencies.php',
     ];
 
     // Load and apply configurations
     array_walk($configFiles, function ($file) use ($containerBuilder) {
-        if ($config = require_once $file) {
+        if ($config = require_once Application::config($file)) {
             is_callable($config) && $config($containerBuilder);
         }
     });

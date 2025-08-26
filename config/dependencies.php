@@ -16,7 +16,7 @@ return function (ContainerBuilder $containerBuilder) {
             $logger->pushProcessor($processor);
 
             $fileHandler = new StreamHandler(
-                Application::path('logs/app.log')
+                Application::root('logs/app.log')
             );
 
             $logger->pushHandler($fileHandler);
