@@ -3,6 +3,7 @@
 namespace Infrastructure\Slim\Controllers;
 
 use Application\Traits\JsonResponseTrait;
+use http\Exception\InvalidArgumentException;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Log\LoggerInterface;
 use Slim\Psr7\Request;
@@ -37,11 +38,10 @@ final class HealthCheckController extends BaseController
      *
      * @param Request $request The incoming HTTP request.
      * @param Response $response The HTTP response instance to be filled.
-     * @param array $args An array of route parameters extracted from the request.
      *
      * @return ResponseInterface The HTTP response containing the service status and additional information.
      */
-    public function __invoke(Request $request, Response $response, array $args): ResponseInterface
+    public function __invoke(Request $request, Response $response): ResponseInterface
     {
         $data = [
             'status' => 'healthy',
