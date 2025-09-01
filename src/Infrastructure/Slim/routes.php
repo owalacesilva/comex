@@ -8,12 +8,12 @@ use Slim\App;
 
 return function (App $app)
 {
-    $app->get('/', function ($request, $response, $args) {
+    $app->get('/', function ($request, $response) {
         return $response->withStatus(200);
     });
 
-    $app->get('/swagger.json', function ($request, $response, $args): ResponseInterface {
-        $openapi = Generator::scan([__DIR__  . '/Controllers']);
+    $app->get('/swagger.json', function ($request, $response): ResponseInterface {
+        $openapi = Generator::scan([Application::src('Infrastructure/Slim/Controllers')]);
 
         $response->getBody()->write($openapi->toJson());
         return $response
@@ -21,8 +21,8 @@ return function (App $app)
             ->withStatus(HttpStatusCode::OK);
     });
 
-    $app->get('/api/docs', function ($request, $response, $args) {
-        $html = file_get_contents(__DIR__ . '/../../../public/swagger.html');
+    $app->get('/api/docs', function ($request, $response) {
+        $html = file_get_contents(Application::root('public/swagger.html'));
         $response->getBody()->write($html);
 
         return $response

@@ -59,7 +59,7 @@ final class Application
      * @param string $path Optional relative path to append to src directory
      * @return string Absolute path with proper directory separators
      */
-    public static function path(string $path = ''): string
+    public static function src(string $path = ''): string
     {
         return self::root('src' . (empty($path) ? '' : DIRECTORY_SEPARATOR . ltrim($path, DIRECTORY_SEPARATOR)));
     }
@@ -76,4 +76,4 @@ final class Application
     }
 }
 
-require_once Application::path('Infrastructure/Slim/slim.php');;
+require_once Application::src('Infrastructure/Slim/slim.php');;

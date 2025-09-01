@@ -1,6 +1,7 @@
 vendor
 .idea/
 logs
+.env
 
 # Do not ignore
 !logs/.gitkeep
