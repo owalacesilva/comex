@@ -8,9 +8,9 @@ use Slim\App;
 use Slim\Interfaces\ErrorHandlerInterface;
 use Throwable;
 
-class HttpNotFoundErrorHandler implements ErrorHandlerInterface
+readonly class HttpNotFoundErrorHandler implements ErrorHandlerInterface
 {
-    public function __construct(private readonly App $app) {}
+    public function __construct(private App $app) {}
 
     public function __invoke(
         ServerRequestInterface $request,

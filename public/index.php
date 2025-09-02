@@ -13,7 +13,7 @@ try {
         throw new \RuntimeException('Environment file (.env) not found. Please copy .env.example to .env and configure your environment settings.');
     }
 
-    $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/..');
+    $dotenv = Dotenv\Dotenv::createUnsafeImmutable(__DIR__ . '/..');
     $dotenv->load();
 } catch (
     \Dotenv\Exception\InvalidEncodingException|
