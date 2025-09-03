@@ -66,8 +66,8 @@ $definitions = [
             'driver' => $settings->get('db.driver'),
             'host' => $settings->get('db.host'),
             'port' => $settings->get('db.port'),
-            'database' => $settings->get('db.database'),
-            'username' => $settings->get('db.username'),
+            'dbname' => $settings->get('db.database'),
+            'user' => $settings->get('db.username'),
             'password' => $settings->get('db.password'),
             'charset' => $settings->get('db.charset'),
         ], $ormConfig);

@@ -13,10 +13,12 @@ RUN apk add --no-cache \
     libxml2-dev \
     zip \
     unzip \
-    postgresql-dev
+    postgresql-dev \
+    libpq-dev
 
 # Install PHP extensions
 RUN docker-php-ext-install \
+    pgsql \
     pdo_pgsql \
     mbstring \
     exif \
