@@ -13,67 +13,76 @@ use Monolog\Processor\UidProcessor;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
 
-return static function (ContainerBuilder $containerBuilder) {
-    $containerBuilder->addDefinitions([
-        /**
-         * Instantiate a settings implementation as Dependency.
-         */
-        SettingsInterface::class => DI\create(EnvSettings::class),
+$definitions = [
+    /**
+     * Instantiate a settings implementation as Dependency.
+     */
+    SettingsInterface::class => DI\create(EnvSettings::class),
 
-        /**
-         * Creates a PSR-3 compatible Logger instance for application logging
-         *
-         * Configures Monolog with:
-         * - Unique request ID processor
-         * - Stream handler writing to app.log
-         *
-         * @return Logger PSR-3 logger instance
-         */
-        LoggerInterface::class => function (ContainerInterface $container) {
-            $logger = new Logger('app');
+    /**
+     * Creates a PSR-3 compatible Logger instance for application logging
+     *
+     * Configures Monolog with:
+     * - Unique request ID processor
+     * - Stream handler writing to app.log
+     *
+     * @return Logger PSR-3 logger instance
+     */
+    LoggerInterface::class => function (ContainerInterface $container) {
+        $logger = new Logger('app');
 
-            $processor = new UidProcessor();
-            $logger->pushProcessor($processor);
+        $processor = new UidProcessor();
+        $logger->pushProcessor($processor);
 
-            $fileHandler = new StreamHandler(
-                Application::root('logs/app.log')
-            );
+        $fileHandler = new StreamHandler(
+            Application::root('logs/app.log')
+        );
 
-            $logger->pushHandler($fileHandler);
+        $logger->pushHandler($fileHandler);
 
-            return $logger;
-        },
+        return $logger;
+    },
 
-        /**
-         * Creates and configures a Doctrine EntityManager instance.
-         *
-         * Configures the EntityManager with:
-         * - Doctrine attribute metadata configuration pointing to models directory
-         * - Database connection settings from application configuration
-         * - Development mode enabled
-         *
-         * @param ContainerInterface $container DI container to get settings from
-         * @return EntityManager Configured EntityManager instance
-         */
-        EntityManagerInterface::class => function (ContainerInterface $container) {
-            $settings = $container->get(SettingsInterface::class);
+    /**
+     * Creates and configures a Doctrine EntityManager instance.
+     *
+     * Configures the EntityManager with:
+     * - Doctrine attribute metadata configuration pointing to models directory
+     * - Database connection settings from application configuration
+     * - Development mode enabled
+     *
+     * @param ContainerInterface $container DI container to get settings from
+     * @return EntityManager Configured EntityManager instance
+     */
+    EntityManagerInterface::class => function (ContainerInterface $container) {
+        $settings = $container->get(SettingsInterface::class);
 
-            $config = ORMSetup::createAttributeMetadataConfiguration(
-                paths: [Application::src('Infrastructure/Doctrine/Models')],
-                isDevMode: true,
-            );
+        $ormConfig = ORMSetup::createAttributeMetadataConfiguration(
+            paths: [Application::src('Infrastructure/Doctrine/Models')],
+            isDevMode: true,
+        );
 
-            $connection = DriverManager::getConnection([
-                'driver' => $settings->get('db.driver'),
-                'host' => $settings->get('db.host'),
-                'port' => $settings->get('db.port'),
-                'database' => $settings->get('db.database'),
-                'username' => $settings->get('db.username'),
-                'password' => $settings->get('db.password'),
-                'charset' => $settings->get('db.charset'),
-            ], $config);
+        $connection = DriverManager::getConnection([
+            'driver' => $settings->get('db.driver'),
+            'host' => $settings->get('db.host'),
+            'port' => $settings->get('db.port'),
+            'database' => $settings->get('db.database'),
+            'username' => $settings->get('db.username'),
+            'password' => $settings->get('db.password'),
+            'charset' => $settings->get('db.charset'),
+        ], $ormConfig);
 
-            return new EntityManager($connection, $config);
-        },
-    ]);
+        return new EntityManager($connection, $ormConfig);
+    },
+];
+
+return static function () use ($definitions) {
+    // Initialize container builder
+    $containerBuilder = new ContainerBuilder();
+
+    // Add definitions
+    $containerBuilder->addDefinitions($definitions);
+
+    // Build e return the container
+    return $containerBuilder->build();
 };

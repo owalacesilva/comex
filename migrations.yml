@@ -1,0 +1,37 @@
+# Doctrine Migrations Configuration
+
+# Database table configuration for storing migration information
+table_storage:
+  # Name of the migrations table in the database
+  table_name: doctrine_migration_versions
+  # Column name for storing migration version
+  version_column_name: version
+  # Maximum length for version string
+  version_column_length: 191
+  # Column name for tracking execution timestamp
+  executed_at_column_name: executed_at
+  # Column name for storing execution duration
+  execution_time_column_name: execution_time
+
+# Paths where migration classes can be found
+migrations_paths:
+  # Main project migrations
+  'Infrastructure\Doctrine\Migrations': src/Infrastructure/Doctrine/Migrations
+
+# If true, all migrations in a set must succeed or everything is rolled back
+all_or_nothing: true
+
+# Whether to wrap migrations in a transaction
+transactional: true
+
+# Verify database platform compatibility
+check_database_platform: true
+
+# Migration organization strategy (none, year, year_and_month)
+organize_migrations: none
+
+# Database connection to use (null = default)
+connection: null
+
+# Entity Manager to use (null = default)
+em: null

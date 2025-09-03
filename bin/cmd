@@ -1,0 +1,32 @@
+#!/usr/bin/env php
+<?php
+
+use splitbrain\phpcli\CLI;
+
+require_once 'config/initialize.php';
+require_once 'config/application.php';
+
+if (count($argv) < 2) {
+    echo "Error: Command name required\n";
+    echo "Usage: {$argv[0]} <command-name> [options]\n";
+    exit(1);
+}
+
+$commandName = $argv[1];
+$commandClass = "Application\\Commands\\{$commandName}Command";
+
+// Check if the command class exists
+if (!class_exists($commandClass)) {
+    echo "Error: Command '{$commandName}' not found\n";
+    exit(1);
+}
+
+// Check if the command class extends CLI
+if (!is_subclass_of($commandClass, CLI::class)) {
+    echo "Error: Command '{$commandName}' must extend splitbrain\\phpcli\\CLI class\n";
+    exit(1);
+}
+
+// Execute the command
+$command = new $commandClass();
+$command->run();

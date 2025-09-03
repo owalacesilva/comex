@@ -8,27 +8,19 @@ use Psr\Log\LoggerInterface;
 use Slim\Exception\HttpNotFoundException;
 use Slim\Handlers\Strategies\RequestResponseArgs;
 use Slim\Factory\AppFactory;
-use DI\ContainerBuilder;
 use Exception;
 
 try {
-    // Initialize container builder
-    $containerBuilder = new ContainerBuilder();
+    // Getting dependencies injection
+    $dependenciesPath = Application::config('dependencies.php');
+    $dependencies = require_once $dependenciesPath;
 
-    // Define configuration files
-    $configFiles = [
-        'dependencies' => 'dependencies.php',
-    ];
-
-    // Load and apply configurations
-    array_walk($configFiles, function ($file) use ($containerBuilder) {
-        if ($config = require_once Application::config($file)) {
-            is_callable($config) && $config($containerBuilder);
-        }
-    });
+    if (!is_callable($dependencies)) {
+        throw new RuntimeException('Dependencies configuration must return a callable');
+    }
 
     // Build container and create app
-    $container = $containerBuilder->build();
+    $container = $dependencies();
 
     // Create an application slim
     $app = AppFactory::createFromContainer($container);
