@@ -29,7 +29,7 @@
       "Application\\": "src/Application",
       "Domain\\": "src/Domain",
       "Infrastructure\\": "src/Infrastructure",
-      "Interface\\": "src/Interface"
+      "InterfaceAdapter\\": "src/InterfaceAdapter"
     }
   },
   "scripts": {

@@ -3,7 +3,7 @@
 namespace Application\Interfaces;
 
 /**
- * Interface defining methods for accessing application settings
+ * InterfaceAdapter defining methods for accessing application settings
  */
 interface SettingsInterface
 {
