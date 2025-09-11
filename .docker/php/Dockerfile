@@ -1,5 +1,8 @@
 FROM php:8.2-fpm-alpine
 
+# Create the conf.d directory first
+RUN mkdir -p /usr/local/etc/php/conf.d
+
 # Destination directories as build-time constants
 ARG PHP_INI_DIR=/usr/local/etc/php/conf.d
 ARG PHP_FPM_DIR=/usr/local/etc/php-fpm.d
@@ -15,16 +18,16 @@ RUN apk add --no-cache \
     unzip \
     postgresql-dev \
     libpq-dev
-
-# Install PHP extensions
-RUN docker-php-ext-install \
-    pgsql \
-    pdo_pgsql \
-    mbstring \
-    exif \
-    pcntl \
-    bcmath \
-    gd
+#
+## Install PHP extensions
+#RUN docker-php-ext-install \
+#    pgsql \
+#    pdo_pgsql \
+#    mbstring \
+#    exif \
+#    pcntl \
+#    bcmath \
+#    gd
 
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer

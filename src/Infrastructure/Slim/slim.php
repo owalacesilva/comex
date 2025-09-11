@@ -8,7 +8,6 @@ use Psr\Log\LoggerInterface;
 use Slim\Exception\HttpNotFoundException;
 use Slim\Handlers\Strategies\RequestResponseArgs;
 use Slim\Factory\AppFactory;
-use Exception;
 
 try {
     // Getting dependencies injection
