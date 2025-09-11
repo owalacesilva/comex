@@ -3,12 +3,13 @@
 namespace Infrastructure\Settings;
 
 use Application\Interfaces\SettingsInterface;
+use Stringable;
 
 /**
  * Represents a settings container that retrieves configuration values based on provided keys.
  * Implements the SettingsInterface to define a common contract for accessing settings.
  */
-readonly class EnvSettings implements SettingsInterface
+readonly class EnvSettings implements SettingsInterface, Stringable
 {
     private array $values;
 
@@ -45,9 +46,25 @@ readonly class EnvSettings implements SettingsInterface
 
     public function get(string $key, mixed $default = null)
     {
-        if (empty($key) || !is_string($key)) {
+        if (empty($key)) {
             return $default;
         }
         return $this->values[$key] ?? $default;
+    }
+
+
+    public function __toString(): string
+    {
+        $sanitizedValues = [];
+        foreach ($this->values as $key => $value) {
+            // Mask sensitive information like passwords
+            if (str_contains($key, 'password') || str_contains($key, 'secret')) {
+                $sanitizedValues[$key] = $value !== false ? '***' : false;
+            } else {
+                $sanitizedValues[$key] = $value;
+            }
+        }
+
+        return json_encode($sanitizedValues, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
     }
 }
