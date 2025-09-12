@@ -9,7 +9,7 @@ abstract class Entity
 {
     protected null|string|int $id;
 
-    protected function __construct(null|string|int $id) {
+    public function __construct(null|string|int $id) {
         $this->id = $id;
     }
 

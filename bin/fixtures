@@ -1,0 +1,28 @@
+#!/usr/bin/env php
+<?php
+
+require_once 'config/initialize.php';
+require_once 'config/application.php';
+
+use Doctrine\Common\DataFixtures\Executor\ORMExecutor;
+use Doctrine\Common\DataFixtures\Loader;
+use Doctrine\ORM\EntityManagerInterface;
+use Infrastructure\Doctrine\Fixtures\SettingsDataLoader;
+
+// Getting dependencies injection
+$dependenciesPath = Application::config('dependencies.php');
+$dependencies = require_once $dependenciesPath;
+
+if (!is_callable($dependencies)) {
+    throw new RuntimeException('Dependencies configuration must return a callable');
+}
+
+// Build container and get entity manager
+$container = $dependencies();
+$entityManager = $container->get(EntityManagerInterface::class);
+
+$loader = new Loader();
+$loader->addFixture(new SettingsDataLoader());
+
+$executor = new ORMExecutor($entityManager, null);
+$executor->execute($loader->getFixtures(), append: true);

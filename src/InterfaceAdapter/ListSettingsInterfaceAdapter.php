@@ -48,7 +48,12 @@ class ListSettingsInterfaceAdapter
             $settings = $this->useCase->execute();
 
             return Result::ok(
-                array_map(fn($setting) => json_encode($setting), $settings)
+                array_map(fn($setting) => [
+                    'id' => $setting->getId() ?? 0, // or whatever default makes sense
+                    'key' => $setting->getKey(),
+                    'value' => $setting->getValue(),
+                    'description' => $setting->getDescription(),
+                ], $settings)
             );
         } catch (DomainException $e) {
             $this->logger->error("Failed to list settings.", [$e->getMessage()]);

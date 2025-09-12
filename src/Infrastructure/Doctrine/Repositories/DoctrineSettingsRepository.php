@@ -5,7 +5,7 @@ namespace Infrastructure\Doctrine\Repositories;
 use Application\Repositories\SettingsRepositoryInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
-use Infrastructure\Doctrine\Models\DoctrineSettingsEntity;
+use Infrastructure\Doctrine\Models\DoctrineSettingsModel;
 
 class DoctrineSettingsRepository extends DoctrineRepository implements SettingsRepositoryInterface
 {
@@ -15,11 +15,13 @@ class DoctrineSettingsRepository extends DoctrineRepository implements SettingsR
     {
         parent::__construct($entityManager);
 
-        $this->repository = $this->getEntityManager()->getRepository(DoctrineSettingsEntity::class);
+        $this->repository = $this->getEntityManager()->getRepository(DoctrineSettingsModel::class);
     }
 
     public function getAll(): array
     {
-        return $this->repository->findAll();
+        $models = $this->repository->findAll();
+
+        return array_map(fn($model) => $model->toDomain(), $models);
     }
 }

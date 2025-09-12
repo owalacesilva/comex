@@ -4,10 +4,11 @@ namespace Infrastructure\Doctrine\Models;
 
 use Doctrine\ORM\Mapping as ORM;
 use DateTime;
+use Domain\Entities\SettingEntity;
 
 #[ORM\Entity]
 #[ORM\Table(name: 'settings')]
-class DoctrineSettingsEntity
+class DoctrineSettingsModel
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -28,4 +29,16 @@ class DoctrineSettingsEntity
 
     #[ORM\Column(name: 'description', type: 'string')]
     public string $description;
+
+    public function toDomain(): SettingEntity
+    {
+        $entity = new SettingEntity($this->id);
+        $entity->createdAt = $this->createdAt;
+        $entity->setUpdatedAt($this->updatedAt);
+        $entity->setKey($this->key);
+        $entity->setValue($this->value);
+        $entity->setDescription($this->description);;
+
+        return $entity;
+    }
 }
