@@ -12,7 +12,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Log\LoggerInterface;
 
 #[OA\Get(
-    path: "/settings",
+    path: "api/v1/settings",
     description: "Get a list of settings.",
     summary: "Get a list of settings.",
     security: ["barerAuth"],
