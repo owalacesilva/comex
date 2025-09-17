@@ -12,6 +12,16 @@ class SettingEntity extends Entity
     private string $value;
     private string $description;
 
+    public function __construct(null|string|int $id, mixed ...$properties) {
+        parent::__construct($id);
+
+        foreach ($properties as $property => $value) {
+            if (property_exists($this, $property)) {
+                $this->$property = $value;
+            }
+        }
+    }
+
     public function getCreatedAt(): DateTime {
         return $this->createdAt;
     }

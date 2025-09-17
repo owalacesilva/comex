@@ -35,7 +35,7 @@ return function (App $app)
     });
 
     $app->get('/swagger.json', function ($request, $response): ResponseInterface {
-        $openapi = Generator::scan([Application::src('Infrastructure/Slim/Controllers')]);
+        $openapi = Generator::scan([Application::src('Infrastructure/Slim/Validators')]);
 
         $response->getBody()->write($openapi->toJson());
         return $response
