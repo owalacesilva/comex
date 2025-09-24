@@ -8,6 +8,7 @@ use Application\Helpers\Result;
 use Application\Repositories\SettingsRepositoryInterface;
 use Application\UseCases\UpdateSettingsUseCase;
 use Domain\Entities\SettingEntity;
+use InterfaceAdapter\Presenters\UpdateSettingsPresenter;
 use InterfaceAdapter\Validators\UpdateSettingValidator;
 use Psr\Log\LoggerInterface;
 use Exception;
@@ -58,18 +59,19 @@ class UpdateSettingsInterfaceAdapter
         }
 
         try {
-            $settingEntities = array_map(fn ($setting) =>
-                new SettingEntity(
+            $settingEntities = array_map(function ($key, $value) {
+                return new SettingEntity(
                     null,
-                    key: $setting['key'],
-                    value: $setting['value'],
-                    description: $setting['description'] ?? null
-                )
-            , $settings);
+                    key: $key,
+                    value: $value
+                );
+            }, array_keys($settings), array_values($settings));
 
             $updatedSettings = $this->useCase->execute($settingEntities);
 
-            return Result::ok($updatedSettings);
+            $presenter = new UpdateSettingsPresenter($updatedSettings);
+
+            return Result::ok($presenter->present());
         } catch (DomainException $e) {
             $this->logger->error("Failed to update setting.", ['error' => $e->getMessage()]);
 

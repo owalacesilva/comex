@@ -46,6 +46,11 @@ try {
     $app->addRoutingMiddleware();
 
     /**
+     * Parse json, form data and xml
+     */
+    $app->addBodyParsingMiddleware();
+
+    /**
      * Add Error Middleware
      *
      * @param bool                  $displayErrorDetails -> Should be set to false in production

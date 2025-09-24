@@ -34,12 +34,13 @@ class DoctrineSettingsRepository extends DoctrineRepository implements SettingsR
     {
         try {
             foreach ($settings as $setting) {
-                $model = $this->repository->find($setting->getId());
+                $model = $this->repository->findOneBy([
+                    'key' => $setting->getKey()
+                ]);
                 if (!$model)
                     continue;
 
                 $model->value = $setting->getValue();
-                $model->description = $setting->getDescription();
                 $this->getEntityManager()->persist($model);
             }
         } catch (ORMException $e) {

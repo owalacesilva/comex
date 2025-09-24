@@ -28,8 +28,8 @@ readonly class UpdateSettingsUseCase
     /**
      * Executes the use case to update a setting
      *
-     * @param array<SettingEntity> $settings The settings to update
-     * @return array<SettingEntity> The updated setting entity
+     * @param SettingEntity[] $settings The settings to update
+     * @return SettingEntity[] The updated setting entity
      */
     public function execute(array $settings): array
     {

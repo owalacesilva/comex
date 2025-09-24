@@ -2,6 +2,7 @@
 
 use Application\Enumerations\HttpStatusCode;
 use Infrastructure\Slim\Controllers\ListSettingsController;
+use Infrastructure\Slim\Controllers\UpdateSettingsController;
 use Infrastructure\Slim\Routes\HealthCheckRoute;
 use OpenApi\Generator;
 use Psr\Http\Message\ResponseInterface;
@@ -60,5 +61,10 @@ return function (App $app)
             sprintf('/v%d/settings', ListSettingsController::VERSION),
             ListSettingsController::class
         )->setName('settings.list');
+
+        $collector->put(
+            sprintf('/v%d/settings', UpdateSettingsController::VERSION),
+            UpdateSettingsController::class
+        )->setName('settings.get');
     });
 };

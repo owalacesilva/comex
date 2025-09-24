@@ -7,7 +7,7 @@ use Infrastructure\Doctrine\Repositories\DoctrineSettingsRepository;
 use InterfaceAdapter\UpdateSettingsInterfaceAdapter;
 use OpenApi\Attributes as OA;
 use Application\Traits\JsonResponseTrait;
-use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Log\LoggerInterface;
 
@@ -73,16 +73,19 @@ final class UpdateSettingsController
         private readonly EntityManagerInterface $entityManager,
     ) {}
 
-    public function __invoke(RequestInterface $request, ResponseInterface $response, array $args): ResponseInterface
+    public function __invoke(ServerRequestInterface $request, ResponseInterface $response): ResponseInterface
     {
-        $data = json_decode((string) $request->getBody(), true) ?? [];
+        $loggedUser = $request->getAttribute('loggedUser');;
+        $payload = $request->getParsedBody() ?? [];
+
+        $this->logger->info("Payload received.", $payload);
 
         $service = new UpdateSettingsInterfaceAdapter(
             $this->logger,
             new DoctrineSettingsRepository($this->entityManager),
         );
 
-        $result = $service->execute($data);
+        $result = $service->execute($payload['settings'] ?? []);
 
         if ($result->isFail()) {
             return $this->error(
