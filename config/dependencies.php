@@ -6,6 +6,7 @@ use Doctrine\DBAL\DriverManager;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\ORMSetup;
+use Doctrine\DBAL\Logging\Middleware as DBALMiddleware;
 use Infrastructure\Settings\EnvSettings;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
@@ -61,6 +62,17 @@ $definitions = [
             paths: [Application::src('Infrastructure/Doctrine/Models')],
             isDevMode: true,
         );
+
+        $logger = new Logger('doctrine');
+        $logger->pushHandler(
+            new StreamHandler(
+                Application::root('logs/doctrine.log')
+            )
+        );
+
+        $ormConfig->setMiddlewares([
+           new DBALMiddleware($logger)
+        ]);
 
         $connection = DriverManager::getConnection([
             'driver' => $settings->get('db.driver'),
